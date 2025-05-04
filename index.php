@@ -125,10 +125,8 @@ if ($isAdmin && isset($_GET['user_id'])) {
 
 // Manejo de guardado del calendario
 if (isset($_POST['save_calendar'])) {
-    // Borrar entradas previas del usuario en el rango marzo-junio 2025
     $db->prepare("DELETE FROM hours WHERE user_id = ? AND date BETWEEN '2025-03-01' AND '2025-06-30'")
        ->execute([$currentUserId]);
-    // Insertar nuevas
     if (!empty($_POST['hours']) && is_array($_POST['hours'])) {
         $ins = $db->prepare("INSERT INTO hours (user_id,date,hours) VALUES (?,?,?)");
         foreach ($_POST['hours'] as $date => $hrs) {
@@ -138,7 +136,10 @@ if (isset($_POST['save_calendar'])) {
             }
         }
     }
-    header("Location: index.php" . ($isAdmin && $viewUserId !== $currentUserId ? '?user_id=' . $viewUserId : ''));
+    $params = [];
+    if ($isAdmin && $viewUserId !== $currentUserId) $params[] = 'user_id=' . $viewUserId;
+    $params[] = 'saved=1';
+    header('Location: index.php?' . implode('&', $params));
     exit;
 }
 
@@ -150,7 +151,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $data[$row['date']] = $row['hours'];
 }
 
-// Cálculo total horas para el usuario visualizado
+// Cálculo total horas
 $total = array_sum($data);
 ?>
 <!DOCTYPE html>
@@ -183,7 +184,12 @@ $total = array_sum($data);
     </section>
     <?php endif; ?>
 
-    <form method="post">
+    <?php if (isset($_GET['saved'])): ?>
+        <div class="flash-message">Calendario guardado correctamente.</div>
+    <?php endif; ?>
+
+    <form method="post" id="calendarForm">
+        <input type="hidden" name="save_calendar" value="1">
     <?php
     function renderCalendar($month, $year, $data, $editable) {
         $firstDay = new DateTime("$year-$month-01");
@@ -197,7 +203,7 @@ $total = array_sum($data);
         for ($day=1; $day <= $daysInMonth; $day++) {
             $date = sprintf('%04d-%02d-%02d',$year,$month,$day);
             $val = $data[$date] ?? '';
-            echo '<td>';
+            echo '<td><div class="day-number">'.$day.'</div>';
             if ($editable) {
                 echo "<input class=\"hour-input\" type=number step=0.25 min=0 name='hours[$date]' value='$val'>";
             } else {
@@ -208,34 +214,43 @@ $total = array_sum($data);
         }
         echo "</tr></table>";
     }
-
     for ($m=3; $m<=6; $m++) {
         renderCalendar($m,2025,$data, $viewUserId === $currentUserId);
     }
     ?>
-    <br>
-    <?php if ($viewUserId === $currentUserId): ?>
-        <button type="submit" name="save_calendar">Guardar Calendario</button>
-    <?php endif; ?>
     </form>
+
+    <?php if ($viewUserId === $currentUserId): ?>
+        <button class="save-btn-floating" type="button" onclick="document.getElementById('calendarForm').submit()">💾</button>
+    <?php endif; ?>
 </div>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('.hour-input');
     function updateTotal() {
         let total = 0;
-        inputs.forEach(function(input) {
+        inputs.forEach(input => {
             const val = parseFloat(input.value);
             if (!isNaN(val)) total += val;
         });
         document.getElementById('totalHours').textContent = total;
     }
-    inputs.forEach(function(input) {
-        input.addEventListener('input', updateTotal);
-    });
+    inputs.forEach(input => input.addEventListener('input', updateTotal));
+    updateTotal();
+    // Transición suave para mensaje de guardado
+    const flash = document.querySelector('.flash-message');
+    if (flash) {
+        flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        setTimeout(() => {
+            flash.style.opacity = '0';
+            flash.style.transform = 'translateY(10px)';
+            setTimeout(() => flash.remove(), 500);
+        }, 3000);
+    }
 });
-</script>
 
+</script>
 </body>
 </html>

@@ -1,130 +1,185 @@
-/* styles.css: Estilos profesionales para el calendario */
+/* styles.css: Paleta cálida y elegante: #f0e0d0, #e8d868, #d8c020, #c8a048, #886018 */
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8;
+    background-color: #f0e0d0;
+    color: #4A401D;
     margin: 0;
     padding: 0;
-    color: #333;
-}
-
-.container {
+  }
+  
+  .container {
     max-width: 960px;
     margin: 40px auto;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-header {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-header h1 {
-    font-size: 1.5rem;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e8d868;
+  }
+  
+  header h1 {
+    font-size: 2rem;
+    color: #886018;
     margin: 0;
-}
-
-header p {
-    font-size: 1rem;
+  }
+  
+  header p {
+    font-size: 1.1rem;
+    color: #4A401D;
     margin: 0;
-}
-
-.btn {
+  }
+  
+  .btn {
     display: inline-block;
-    padding: 8px 16px;
-    background: #007bff;
+    padding: 10px 20px;
+    background: #d8c020;
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
+    font-weight: bold;
     transition: background 0.3s ease;
-}
-
-.btn:hover {
-    background: #0056b3;
-}
-
-.users-list ul {
+  }
+  
+  .btn:hover {
+    background: #c8a048;
+  }
+  
+  .users-list ul {
     list-style: none;
     padding: 0;
-}
-
-.users-list li {
-    margin-bottom: 8px;
-}
-
-.calendar {
+    margin-top: 15px;
+  }
+  
+  .users-list li {
+    margin-bottom: 6px;
+  }
+  
+  .flash-message {
+    background-color: #8bbd78;
+    color: #47894b;
+    border: 1px solid #47894b;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .calendar {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.calendar th,
-.calendar td {
-    border: 1px solid #ddd;
+    margin-bottom: 60px;
+  }
+  
+  .calendar th,
+  .calendar td {
+    border: 1px solid #e8d868;
     width: 14.28%;
-    height: 80px;
+    height: 100px;
+    padding: 6px;
+    position: relative;
+    background: #fff;
     text-align: center;
-    vertical-align: top;
-    padding: 4px;
-}
-
-.calendar th {
-    background: #007bff;
+  }
+  
+  .calendar th {
+    background: #e8d868;
     color: #fff;
-    font-weight: normal;
-}
-
-.calendar td input[type="number"] {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 4px;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .day-number {
+    position: absolute;
+    top: 6px;
+    right: 6px;
     font-size: 0.9rem;
-}
-
-button[type="submit"] {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
+    font-weight: bold;
+    color: #886018;
+  }
+  
+  .calendar td input[type="number"] {
+    width: calc(100% - 12px);
+    border: 1px solid #c8a048;
     border-radius: 4px;
-    cursor: pointer;
-    background: #28a745;
+    padding: 6px;
+    font-size: 0.9rem;
+    margin-top: 28px;
+    color: #4A401D;
+  }
+  
+  /* Ocultar el botón submit tradicional */
+  button[type="submit"] {
+    display: none;
+  }
+  
+  .save-btn-floating {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #c8a048;
     color: #fff;
-    transition: background 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background: #218838;
-}
-
-.box {
+    border: none;
+    padding: 18px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  
+  .save-btn-floating:hover {
+    background: #886018;
+    transform: scale(1.1);
+  }
+  
+  .box {
     margin-bottom: 20px;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fafafa;
-}
-
-.box h2 {
+    border: 1px solid #e8d868;
+    border-radius: 6px;
+    background: #fff;
+  }
+  
+  .box h2 {
     margin-top: 0;
-}
-
-.box input {
+    color: #886018;
+  }
+  
+  .box input {
     display: block;
     width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid #c8a048;
     border-radius: 4px;
     font-size: 1rem;
-}
-
-.error {
-    color: #dc3545;
+    color: #4A401D;
+  }
+  
+  .error {
+    color: #c0392b;
     margin-bottom: 20px;
-}
+  }
+  
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .save-btn-floating {
+      bottom: 15px;
+      right: 15px;
+    }
+  }
+  
