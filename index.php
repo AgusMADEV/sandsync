@@ -175,9 +175,18 @@ $total = array_sum($data);
         <h2>Calendarios de usuarios</h2>
         <ul>
         <?php
-            $uStmt = $db->query("SELECT DISTINCT u.id,u.username FROM users u JOIN hours h ON u.id=h.user_id");
+            // *** MODIFICACIÓN 1: añadimos u.name y ordenamos por nombre ***
+            $uStmt = $db->query("
+                SELECT DISTINCT u.id, u.name, u.username
+                FROM users u
+                JOIN hours h ON u.id = h.user_id
+                ORDER BY u.name
+            ");
             foreach ($uStmt->fetchAll(PDO::FETCH_ASSOC) as $u) {
-                echo '<li><a href="?user_id='.$u['id'].'">'.htmlspecialchars($u['username']).'</a></li>';
+                // *** MODIFICACIÓN 2: mostramos «nombre completo – usuario» ***
+                echo '<li><a href="?user_id='.$u['id'].'">'.
+                         htmlspecialchars($u['name']).' - '.htmlspecialchars($u['username']).
+                     '</a></li>';
             }
         ?>
         </ul>
@@ -226,31 +235,29 @@ $total = array_sum($data);
 </div>
 
 <script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    const inputs = document.querySelectorAll('.hour-input');
-    function updateTotal() {
-        let total = 0;
-        inputs.forEach(input => {
-            const val = parseFloat(input.value);
-            if (!isNaN(val)) total += val;
-        });
-        document.getElementById('totalHours').textContent = total;
-    }
-    inputs.forEach(input => input.addEventListener('input', updateTotal));
-    updateTotal();
-    // Transición suave para mensaje de guardado
-    const flash = document.querySelector('.flash-message');
-    if (flash) {
-        flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        setTimeout(() => {
-            flash.style.opacity = '0';
-            flash.style.transform = 'translateY(10px)';
-            setTimeout(() => flash.remove(), 500);
-        }, 3000);
-    }
-});
-
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.hour-input');
+        function updateTotal() {
+            let total = 0;
+            inputs.forEach(input => {
+                const val = parseFloat(input.value);
+                if (!isNaN(val)) total += val;
+            });
+            document.getElementById('totalHours').textContent = total;
+        }
+        inputs.forEach(input => input.addEventListener('input', updateTotal));
+        updateTotal();
+        // Transición suave para mensaje de guardado
+        const flash = document.querySelector('.flash-message');
+        if (flash) {
+            flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                flash.style.transform = 'translateY(10px)';
+                setTimeout(() => flash.remove(), 500);
+            }, 3000);
+        }
+    });
 </script>
 </body>
 </html>

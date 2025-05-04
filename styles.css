@@ -62,7 +62,10 @@ body {
   .users-list li {
     margin-bottom: 6px;
   }
-  
+  .users-list li a{
+    text-decoration: none;
+    color: rgb(116, 187, 234);
+  }
   .flash-message {
     background-color: #8bbd78;
     color: #47894b;
